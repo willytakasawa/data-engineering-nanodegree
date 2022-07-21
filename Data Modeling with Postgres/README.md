@@ -5,8 +5,7 @@ A startup called Sparkify wants to analyze the data they've been collecting on s
 The analytics team is particularly interested in understanding what songs users are listening to. Currently, they don't have an easy way to query their data,
 which resides in a directory of JSON logs on user activity on the app, as well as a directory with JSON metadata on the songs in their app.
 They'd like a data engineer to create a Postgres database with tables designed to optimize queries on song play analysis, and bring you on the project.
-Your role is to create a database schema and ETL pipeline for this analysis. You'll be able to test your database and ETL pipeline by running queries given
-to you by the analytics team from Sparkify and compare your results with their expected results.
+Your role is to create a database schema and ETL pipeline for this analysis.
 
 ## Project Datasets
 
@@ -46,12 +45,12 @@ log_data/2018/11/2018-11-12-events.json
 log_data/2018/11/2018-11-13-events.json
 ```
 And below is an example of what the data in a log file, looks like.
-```
-INSERT DATAFRAME HERE
-```
+![](https://github.com/willytakasawa/data-engineering-nanodegree/blob/master/Data%20Modeling%20with%20Postgres/imgs/log-data.png)
 
 ## Database Schema
 Using the song and log datasets, you'll need to create a star schema optimized for queries on song play analysis. This includes the following tables.
+
+![](https://github.com/willytakasawa/data-engineering-nanodegree/blob/master/Data%20Modeling%20with%20Postgres/imgs/db_erd.svg)
 
 Fact Table
 songplays - records in log data associated with song plays i.e. records with page NextSong
@@ -95,9 +94,3 @@ Follow instructions in the etl.ipynb notebook to develop ETL processes for each 
 
 Build ETL Pipeline
 Use what you've completed in etl.ipynb to complete etl.py, where you'll process the entire datasets. Remember to run create_tables.py before running etl.py to reset your tables. Run test.ipynb to confirm your records were successfully inserted into each table.
-
-Run Sanity Tests
-When you are satisfied with your work, run the cell under the Sanity Tests section in the test.ipynb notebook. The cells contain some basic tests that will evaluate your work and catch any silly mistakes. We test column data types, primary key constraints and not-null constraints as well look for on-conflict clauses wherever required. If any of the test cases catches a problem, you will see a warning message printed in Orange that looks like this:
-
-[WARNING] The songplays table does not have a primary key!
-You may want to make appropriate changes to your code to make these warning messages go away. The tests below are only meant to help you make your work foolproof. The submission will still be graded by a human grader against the project rubric.
