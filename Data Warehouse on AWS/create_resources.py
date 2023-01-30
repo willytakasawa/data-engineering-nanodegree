@@ -58,8 +58,8 @@ def create_iam_role(iam):
             )
         )
 
-    except Exception as e:
-        print(e)
+    except ClientError as e:
+        logging.exception(e)
 
     # Define policy to access S3 bucket (ReadOnly)
     iam.attach_role_policy(
