@@ -156,6 +156,7 @@ def main(argument):
 
 
 if __name__ == '__main__':
+    logging.basicConfig(level=logging.DEBUG, format='%(asctime)s %(levelname)-8s %(message)s')
     parser = argparse.ArgumentParser()
     parser.add_argument('--delete', dest='delete', action='store_true', default=False)
     args = parser.parse_args()
