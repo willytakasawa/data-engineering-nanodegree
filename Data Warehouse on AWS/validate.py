@@ -17,6 +17,7 @@ def select_queries(cur, conn):
     except Exception as e:
         logging.exception(e)
 
+
 def count_queries(cur, conn):
     try:
         for table in tables:
