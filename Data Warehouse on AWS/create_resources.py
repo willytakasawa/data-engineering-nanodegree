@@ -3,6 +3,7 @@ import configparser
 import logging
 import json
 import time
+import argparse
 
 from botocore.exceptions import ClientError
 
@@ -12,17 +13,17 @@ config = configparser.ConfigParser()
 config.read('dwh.cfg')
 
 # GLOBAL VARS
-KEY = ''
-SECRET = ''
-DWH_IAM_ROLE_NAME = ''
-DWH_CLUSTER_TYPE = ''
-DWH_NODE_TYPE = ''
-DWH_NUM_NODES = ''
-DWH_DB = ''
-DWH_CLUSTER_IDENTIFIER = ''
-DWH_DB_USER = ''
-DWH_DB_PASSWORD = ''
-DWH_PORT = ''
+KEY = config.get('AWS', 'KEY')
+SECRET = config.get('AWS', 'SECRET')
+DWH_IAM_ROLE_NAME = config.get('CLUSTER', 'IAM_ROLE_NAME')
+DWH_CLUSTER_TYPE = config.get('CLUSTER', 'CLUSTER_TYPE')
+DWH_NODE_TYPE = config.get('CLUSTER', 'NODE_TYPE')
+DWH_NUM_NODES = config.get('CLUSTER', 'NUM_NODES')
+DWH_CLUSTER_IDENTIFIER = config.get('CLUSTER', 'CLUSTER_IDENTIFIER')
+DWH_DB = config.get('DB', 'DB_NAME')
+DWH_DB_USER = config.get('DB', 'DB_USER')
+DWH_DB_PASSWORD = config.get('DB', 'DP_PASSWORD')
+DWH_PORT = config.get('DB', 'DB_PORT')
 
 
 def create_aws_resources():
@@ -69,6 +70,7 @@ def create_iam_role(iam):
     # Get the IAM role ARN
     role_arn = iam.get_role(RoleName=DWH_IAM_ROLE_NAME)['Role']['Arn']
     logging.debug('IAM: {}, ARN: {} created'.format(DWH_IAM_ROLE_NAME, role_arn))
+    config['IAM_ROLE']['ARN'] = role_arn
     return role_arn
 
 
@@ -109,23 +111,55 @@ def create_tcp(ec2, vpc_id):
         logging.exception(e)
 
 
-def main():
-    iam, redshift, ec2, s3 = create_aws_resources()
-    role_arn = create_iam_role(iam)
-    rds_create_cluster(redshift, role_arn)
+def delete_rds_cluster(redshift):
+    # Delete Redshift Cluster
+    try:
+        redshift.delete_cluster(ClusterIdentifier=DWH_CLUSTER_IDENTIFIER, SkipFinalClusterSnapshot=True)
+        logging.debug('Deleting Redshift Cluster {}.'.format(DWH_CLUSTER_IDENTIFIER))
 
-    for x in range(int(60)):
-        cluster_props = redshift.describe_clusters(ClusterIdentifier=DWH_CLUSTER_IDENTIFIER)['Clusters'][0]
-        if cluster_props['ClusterStatus'] == 'available':
-            logging.debug('Redshift Cluster is available and created at {}'.format(cluster_props['Endpoint']))
-            create_tcp(ec2, cluster_props['VpcId'])
-            break
-        logging.debug('Cluster status: {}. Retrying...'.format(cluster_props['ClusterStatus']))
-        time.sleep(5)
+    except ClientError as e:
+        logging.exception(e)
+
+
+def delete_iam_role(iam):
+    # Detach and Delete IAM role
+    try:
+        iam.detach_role_policy(RoleName=DWH_IAM_ROLE_NAME, PolicyArn="arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess")
+        iam.delete_role(RoleName=DWH_IAM_ROLE_NAME)
+        logging.debug('Deleting IAM role {}.'.format(DWH_IAM_ROLE_NAME))
+
+    except ClientError as e:
+        logging.exception(e)
+
+
+def main(argument):
+
+    iam, redshift, ec2, s3 = create_aws_resources()
+
+    if argument.delete:
+        delete_rds_cluster(redshift)
+        delete_iam_role(iam)
+
+    else:
+        role_arn = create_iam_role(iam)
+        rds_create_cluster(redshift, role_arn)
+
+        for x in range(int(300)):
+            cluster_props = redshift.describe_clusters(ClusterIdentifier=DWH_CLUSTER_IDENTIFIER)['Clusters'][0]
+            if cluster_props['ClusterStatus'] == 'available':
+                logging.debug('Redshift Cluster is available and created at {}'.format(cluster_props['Endpoint']))
+                config['DB']['HOST'] = cluster_props['Endpoint']
+                create_tcp(ec2, cluster_props['VpcId'])
+                break
+            logging.debug('Cluster status: {}. Retrying...'.format(cluster_props['ClusterStatus']))
+            time.sleep(10)
 
 
 if __name__ == '__main__':
-    main()
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--delete', dest='delete', action='store_true', default=False)
+    args = parser.parse_args()
+    main(args)
 
 
 
