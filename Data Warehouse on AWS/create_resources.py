@@ -22,7 +22,7 @@ DWH_NUM_NODES = config.get('CLUSTER', 'NUM_NODES')
 DWH_CLUSTER_IDENTIFIER = config.get('CLUSTER', 'CLUSTER_IDENTIFIER')
 DWH_DB = config.get('DB', 'DB_NAME')
 DWH_DB_USER = config.get('DB', 'DB_USER')
-DWH_DB_PASSWORD = config.get('DB', 'DP_PASSWORD')
+DWH_DB_PASSWORD = config.get('DB', 'DB_PASSWORD')
 DWH_PORT = config.get('DB', 'DB_PORT')
 
 
