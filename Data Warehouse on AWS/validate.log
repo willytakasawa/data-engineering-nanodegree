@@ -1,0 +1,45 @@
+2023-01-30 21:11:11,757 INFO     SELECT * FROM fct_songplays 
+ ---  -------------------  --  ----  ------------------  ------------------  ---  -----------------------------------  -----------------------------------------------------------------------------------------------------------------------
+ 19  2018-11-15 12:50:26  30  paid  SOSQIRI12A8C133897  AR1XIHA1187FB4AED3  324  San Jose-Sunnyvale-Santa Clara, CA   Mozilla/5.0 (Windows NT 6.1; WOW64; rv:31.0) Gecko/20100101 Firefox/31.0
+107  2018-11-17 16:42:29  73  paid  SOULTKQ12AB018A183  ARKQQZA12086C116FC  518  Tampa-St. Petersburg-Clearwater, FL  "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_4) AppleWebKit/537.78.2 (KHTML, like Gecko) Version/7.0.6 Safari/537.78.2"
+131  2018-11-18 17:17:04  29  paid  SOUGLIK12A8C143DF4  ARFNJLY1187FB3E735  589  Atlanta-Sandy Springs-Roswell, GA    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_4) AppleWebKit/537.78.2 (KHTML, like Gecko) Version/7.0.6 Safari/537.78.2"
+179  2018-11-15 11:39:32  30  paid  SOULTKQ12AB018A183  ARKQQZA12086C116FC  324  San Jose-Sunnyvale-Santa Clara, CA   Mozilla/5.0 (Windows NT 6.1; WOW64; rv:31.0) Gecko/20100101 Firefox/31.0
+187  2018-11-15 11:39:32  30  paid  SOULTKQ12AB018A183  ARKQQZA12086C116FC  324  San Jose-Sunnyvale-Santa Clara, CA   Mozilla/5.0 (Windows NT 6.1; WOW64; rv:31.0) Gecko/20100101 Firefox/31.0
+---  -------------------  --  ----  ------------------  ------------------  ---  -----------------------------------  -----------------------------------------------------------------------------------------------------------------------
+2023-01-30 21:11:12,425 INFO     SELECT * FROM dim_users 
+ --  ---------  --------  -  ----
+ 2  Jizelle    Benjamin  F  free
+57  Katherine  Gay       F  free
+63  Ayla       Johnson   F  free
+ 9  Wyatt      Scott     M  free
+95  Sara       Johnson   F  paid
+--  ---------  --------  -  ----
+2023-01-30 21:11:13,105 INFO     SELECT * FROM dim_songs 
+ ------------------  -----------------------  ------------------  ----  -------
+SOHTYSP12A58A78A1C  F#ckin' On Camera        AR3QRFN1187FB37344     0  199.549
+SOGQTRZ12A8C13C8B0  I Can't Stop Loving You  ARF3GX71187FB3EB66  2005  261.955
+SOXJPJI12AB01855CC  Danger: Wildman          AR3LB3G1187FB405DD  2009  241.449
+SOUYTJK12A6701CD3D  Big Business             AR0CANF1187B9AF35F  2004  149.916
+SOWYALW12A8C136BE6  A World Of My Own        ARVVLMQ11F4C8456E4     0  255.216
+------------------  -----------------------  ------------------  ----  -------
+2023-01-30 21:11:13,780 INFO     SELECT * FROM dim_artists 
+ ------------------  -------------------------------------  ----------------  -------  --------
+ARZACJ71187FB42C7B  Barbecue Bob                           Walnut Grove, GA  33.7417  -83.8536
+AR1ZKBE1187FB53629  Kraftwerk                              D\ufffdorf, Germany
+ARUYSY31187FB3F0CB  Northern Picture Library
+ARBB8QH1187FB54138  Paul Hindemith/Philharmonia Orchestra
+ARDNW1B1187FB4ABBB  Ch�co Feliciano And Joe King
+------------------  -------------------------------------  ----------------  -------  --------
+2023-01-30 21:11:14,444 INFO     SELECT * FROM dim_time 
+ -------------------  -  -  --  --  ----  -
+2018-11-06 03:14:08  3  6  45  11  2018  2
+2018-11-06 04:56:11  4  6  45  11  2018  2
+2018-11-06 06:05:51  6  6  45  11  2018  2
+2018-11-02 03:05:57  3  2  44  11  2018  5
+2018-11-02 05:15:41  5  2  44  11  2018  5
+-------------------  -  -  --  --  ----  -
+2023-01-30 21:11:15,124 INFO     COUNT TABLE fct_songplays: [(1332,)]
+2023-01-30 21:11:15,794 INFO     COUNT TABLE dim_users: [(210,)]
+2023-01-30 21:11:16,464 INFO     COUNT TABLE dim_songs: [(29792,)]
+2023-01-30 21:11:17,139 INFO     COUNT TABLE dim_artists: [(20050,)]
+2023-01-30 21:11:17,804 INFO     COUNT TABLE dim_time: [(16046,)]

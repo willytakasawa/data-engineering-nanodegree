@@ -15,6 +15,7 @@ config.read('dwh.cfg')
 # GLOBAL VARS
 KEY = config.get('AWS', 'KEY')
 SECRET = config.get('AWS', 'SECRET')
+TOKEN = config.get('AWS', 'TOKEN')
 DWH_IAM_ROLE_NAME = config.get('CLUSTER', 'IAM_ROLE_NAME')
 DWH_CLUSTER_TYPE = config.get('CLUSTER', 'CLUSTER_TYPE')
 DWH_NODE_TYPE = config.get('CLUSTER', 'NODE_TYPE')
@@ -28,10 +29,10 @@ DWH_PORT = config.get('DB', 'DB_PORT')
 
 def create_aws_resources():
     # Create all AWS resources
-    iam = boto3.client('iam', aws_access_key_id=KEY, aws_secret_access_key=SECRET, region_name='us-west-2')
-    redshift = boto3.client('redshift', aws_access_key_id=KEY, aws_secret_access_key=SECRET, region_name='us-west-2')
-    ec2 = boto3.resource('ec2', aws_access_key_id=KEY, aws_secret_access_key=SECRET, region_name='us-west-2')
-    s3 = boto3.resource('s3', aws_access_key_id=KEY, aws_secret_access_key=SECRET, region_name='us-west-2')
+    iam = boto3.client('iam', aws_access_key_id=KEY, aws_secret_access_key=SECRET, region_name='us-west-2', aws_session_token=TOKEN)
+    redshift = boto3.client('redshift', aws_access_key_id=KEY, aws_secret_access_key=SECRET, region_name='us-west-2', aws_session_token=TOKEN)
+    ec2 = boto3.resource('ec2', aws_access_key_id=KEY, aws_secret_access_key=SECRET, region_name='us-west-2', aws_session_token=TOKEN)
+    s3 = boto3.resource('s3', aws_access_key_id=KEY, aws_secret_access_key=SECRET, region_name='us-west-2', aws_session_token=TOKEN)
     logging.debug("Create AWS Resources.")
     return iam, redshift, ec2, s3
 
@@ -70,7 +71,10 @@ def create_iam_role(iam):
     # Get the IAM role ARN
     role_arn = iam.get_role(RoleName=DWH_IAM_ROLE_NAME)['Role']['Arn']
     logging.debug('IAM: {}, ARN: {} created'.format(DWH_IAM_ROLE_NAME, role_arn))
-    config['IAM_ROLE']['ARN'] = role_arn
+    config.set('IAM_ROLE', 'ARN', str(role_arn))
+    with open('dwh.cfg', 'w') as f:
+        config.write(f)
+        
     return role_arn
 
 
@@ -97,7 +101,7 @@ def create_tcp(ec2, vpc_id):
     # Open an incoming TCP port to access the cluster endpoint
     try:
         vpc = ec2.Vpc(id=vpc_id)
-        default_sg = list(vpc.secutiryt_groups.all())[0]
+        default_sg = list(vpc.security_groups.all())[0]
         default_sg.authorize_ingress(
             GroupName=default_sg.group_name,
             CidrIp='0.0.0.0/0',
@@ -144,14 +148,16 @@ def main(argument):
         role_arn = create_iam_role(iam)
         rds_create_cluster(redshift, role_arn)
 
-        for x in range(int(300)):
+        for x in range(0,600,10):
             cluster_props = redshift.describe_clusters(ClusterIdentifier=DWH_CLUSTER_IDENTIFIER)['Clusters'][0]
             if cluster_props['ClusterStatus'] == 'available':
                 logging.debug('Redshift Cluster is available and created at {}'.format(cluster_props['Endpoint']))
-                config['DB']['HOST'] = cluster_props['Endpoint']
+                config.set('DB', 'HOST', str(cluster_props['Endpoint']['Address']))
+                with open('dwh.cfg', 'w') as f:
+                    config.write(f)
                 create_tcp(ec2, cluster_props['VpcId'])
                 break
-            logging.debug('Cluster status: {}. Retrying...'.format(cluster_props['ClusterStatus']))
+            logging.debug('Cluster status: {}. Attempt: {} - Waiting...'.format(cluster_props['ClusterStatus'], round((x/10)+1),0))
             time.sleep(10)
 
 

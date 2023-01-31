@@ -1,5 +1,6 @@
 import configparser
 import logging
+from tabulate import tabulate
 
 import psycopg2
 
@@ -13,7 +14,7 @@ def select_queries(cur, conn):
         for table in tables:
             cur.execute("SELECT * FROM {} LIMIT 5".format(table))
             conn.commit()
-            logging.info("SELECT * FROM {} \n {}".format(table, cur.fetchall()))
+            logging.info("SELECT * FROM {} \n {}".format(table, tabulate(cur.fetchall())))
     except Exception as e:
         logging.exception(e)
 
@@ -23,7 +24,7 @@ def count_queries(cur, conn):
         for table in tables:
             cur.execute("SELECT COUNT(*) FROM {}".format(table))
             conn.commit()
-            logging.info("COUNT TABLE {} \n {}".format(table, cur.fetchall()))
+            logging.info("COUNT TABLE {}: {}".format(table, cur.fetchall()))
     except Exception as e:
         logging.exception(e)
 
@@ -43,5 +44,10 @@ def main():
     cur = conn.cursor()
 
     select_queries(cur, conn)
+    count_queries(cur, conn)
 
     conn.close()
+
+
+if __name__ == "__main__":
+    main()
