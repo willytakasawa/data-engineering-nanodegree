@@ -63,14 +63,23 @@ This project uses star schema with one fact table and four dimension tables to o
 ![](https://github.com/willytakasawa/data-engineering-nanodegree/blob/master/Data%20Modeling%20with%20Postgres/imgs/db_erd.svg)
 
 ## Project Structure
-1. 
+Each task of the workflow which loads data from S3 buckets into analytical structure on AWS Redshift is detailed below:
+
+1. Create Resources:
+2. Create tables:
+3. ETL:
+4. Delete Resources:
 
 ## How to run
-1. ```docker-compose -f "docker-compose.yml" up -d --build```
-    - builds a container with PostgreSQL
-2. ```create_tables.py```
-    - create and reload database and tables
-3. ```etl.py```
-    - reads and processes files from song_data and log_data and loads them into specific tables
-4. ```test.ipynb```
-    - displays the first few rows of each table to let sanity tests on the database
+1. ```Modify dwh.cfg```
+    - The user must insert information about AWS Project ID, AWS SECRET, AWS PERSONAL TOKEN
+2. ```create_resources.py```
+    - This script creates all the resources needed to run the workflow
+3. ```create_tables.py```
+    - Delete all tables if they exist and create new tables on a dimensional-model
+4. ```etl.py```
+    - Load data from S3 into staging tables on Amazon Redshift and process that data into analytics tables
+5. ```validate.py```
+    - Performs basica validation of data stored on Amazon Redshift, for instance displays few records and count the total of records in each table, this results are stored into log file that can be accessed from the root directry of this project.
+6. ```create_resources.py --delete```
+    - Delete all the resources created to run the workflow in order to prevent any extra fees from AWS.
