@@ -1,7 +1,7 @@
 # Project: Data Warehouse on AWS
 
 ## Introduction
-This project aims to...
+This project aims to construct a Data Warehouse on AWS, extracting transactional data from S3 and load into analytical structure on Amazon Redshift.
 
 ## Project Datasets
 
@@ -61,6 +61,9 @@ This project uses star schema with one fact table and four dimension tables to o
     - *start_time, hour, day, week, month, year, weekday*
 
 ![](https://github.com/willytakasawa/data-engineering-nanodegree/blob/master/Data%20Modeling%20with%20Postgres/imgs/db_erd.svg)
+
+## Project Structure
+1. 
 
 ## How to run
 1. ```docker-compose -f "docker-compose.yml" up -d --build```
