@@ -65,16 +65,16 @@ This project uses star schema with one fact table and four dimension tables to o
 ## Project Structure
 Each task of the workflow which loads data from S3 buckets into analytical structure on AWS Redshift is detailed below:
 
-1. Create Resources:
+**1. Create Resources:**
 The first step to run the project is based on create all AWS resources and define permissions needed. This task can be performed directly through AWS Console however in this case it was decided to use a python script to manage the solution. 
 
-2. Create tables:
+**2. Create tables:**
 With AWS enviroment set, the user needs to delete previous existing tables and create the staging and analytical structure. 
 
-3. ETL:
+**3. ETL:**
 The ETL proccess aims to populate staging tables with data from S3 and then process that data into analytics tables modeled following star-schema patterns.
 
-4. Delete Resources:
+**4. Delete Resources:**
 Finally to avoid extra fees, the user needs to delete all the AWS resources created to run the workflow using the argument --delete on the python script that creates the resources.
 
 ## How to run
