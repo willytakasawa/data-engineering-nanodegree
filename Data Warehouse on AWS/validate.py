@@ -9,7 +9,13 @@ tables = ['fct_songplays', 'dim_users', 'dim_songs', 'dim_artists', 'dim_time']
 
 
 def select_queries(cur, conn):
-    # Function to validate if tables have data
+    """Function to check data from all tables.
+
+    Keyword arguments:
+    cur -- cursor of psycopg2
+    conn -- connection of psycopg2
+    """
+
     try:
         for table in tables:
             cur.execute("SELECT * FROM {} LIMIT 5".format(table))
@@ -20,6 +26,13 @@ def select_queries(cur, conn):
 
 
 def count_queries(cur, conn):
+    """Function to count data from all tables.
+
+    Keyword arguments:
+    cur -- cursor of psycopg2
+    conn -- connection of psycopg2
+    """
+    
     try:
         for table in tables:
             cur.execute("SELECT COUNT(*) FROM {}".format(table))
@@ -30,6 +43,15 @@ def count_queries(cur, conn):
 
 
 def main():
+    """
+    - Configure the log file
+    - Read config file
+    - Connects to database
+    - Do SELECT query in all tables
+    - Do COUNT query in all tables
+    - Close connection
+    """
+
     logging.basicConfig(
         level=logging.INFO,
         filemode='w+',

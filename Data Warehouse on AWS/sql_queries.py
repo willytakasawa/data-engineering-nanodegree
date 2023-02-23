@@ -165,7 +165,7 @@ songplay_table_insert = (
     LEFT JOIN staging_songs s ON
         e.artist = s.artist_name AND e.song = s.title
     WHERE
-        e.page = 'NextSong' AND s.song_id IS NOT NULL
+        e.page = 'NextSong' AND s.song_id IS NOT NULL AND e.length = s.duration
     """
 )
 
@@ -179,7 +179,7 @@ user_table_insert = (
         gender,
         level
     FROM staging_events
-    WHERE userId IS NOT NULL
+    WHERE userId IS NOT NULL AND page = 'NextSong'
     """
 )
 

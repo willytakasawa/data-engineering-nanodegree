@@ -28,7 +28,10 @@ DWH_PORT = config.get('DB', 'DB_PORT')
 
 
 def create_aws_resources():
-    # Create all AWS resources
+    """
+    Create all AWS resources
+    """
+
     iam = boto3.client('iam', aws_access_key_id=KEY, aws_secret_access_key=SECRET, region_name='us-west-2', aws_session_token=TOKEN)
     redshift = boto3.client('redshift', aws_access_key_id=KEY, aws_secret_access_key=SECRET, region_name='us-west-2', aws_session_token=TOKEN)
     ec2 = boto3.resource('ec2', aws_access_key_id=KEY, aws_secret_access_key=SECRET, region_name='us-west-2', aws_session_token=TOKEN)
@@ -38,7 +41,12 @@ def create_aws_resources():
 
 
 def create_iam_role(iam):
-    # Define funcition to create IAM role
+    """Function to create and attach IAM role.
+
+    Keyword arguments:
+    iam -- iam resource
+    """
+
     try:
         logging.debug('Creating a new IAM Role')
         dwh_role = iam.create_role(
@@ -79,7 +87,13 @@ def create_iam_role(iam):
 
 
 def rds_create_cluster(redshift, role_arn):
-    # Create a RedShift Cluster
+    """Function to create redshift cluster.
+
+    Keyword arguments:
+    redshift -- redshift resource
+    role_arn -- ARN role defined
+    """
+
     try:
         redshift.create_cluster(
             ClusterType=DWH_CLUSTER_TYPE,
@@ -98,7 +112,13 @@ def rds_create_cluster(redshift, role_arn):
 
 
 def create_tcp(ec2, vpc_id):
-    # Open an incoming TCP port to access the cluster endpoint
+    """Function to open an incoming TCP port to access the cluster endpoint.
+
+    Keyword arguments:
+    ec2 -- ec2 resource
+    vpc_id -- Virtual Private Cloud ID
+    """
+
     try:
         vpc = ec2.Vpc(id=vpc_id)
         default_sg = list(vpc.security_groups.all())[0]
@@ -116,7 +136,12 @@ def create_tcp(ec2, vpc_id):
 
 
 def delete_rds_cluster(redshift):
-    # Delete Redshift Cluster
+    """Function to delete Redshift Cluster.
+
+    Keyword arguments:
+    redshift -- redshift resource
+    """
+
     try:
         redshift.delete_cluster(ClusterIdentifier=DWH_CLUSTER_IDENTIFIER, SkipFinalClusterSnapshot=True)
         logging.debug('Deleting Redshift Cluster {}.'.format(DWH_CLUSTER_IDENTIFIER))
@@ -126,7 +151,12 @@ def delete_rds_cluster(redshift):
 
 
 def delete_iam_role(iam):
-    # Detach and Delete IAM role
+    """Function to detach and delete IAM role.
+
+    Keyword arguments:
+    iam -- iam resource
+    """
+
     try:
         iam.detach_role_policy(RoleName=DWH_IAM_ROLE_NAME, PolicyArn="arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess")
         iam.delete_role(RoleName=DWH_IAM_ROLE_NAME)
@@ -137,6 +167,11 @@ def delete_iam_role(iam):
 
 
 def main(argument):
+    """
+    - Create/delete all the resources
+    - Wait until RDS cluster become available
+    - Set cfg cluster host
+    """
 
     iam, redshift, ec2, s3 = create_aws_resources()
 
