@@ -65,14 +65,18 @@ This project uses star schema with one fact table and four dimension tables to o
 ![](https://github.com/willytakasawa/data-engineering-nanodegree/blob/master/Data%20Modeling%20with%20Postgres/imgs/db_erd.svg)
 
 ## Project Structure
-The workflow which reads raw data from S3, proccess to create the dimensional model and loads target tables back to S3 bucket into analytical structure on AWS is detailed below:
-
-**1. ETL:**
-The ETL proccess aims to populate staging tables with data from S3 and then process that data into analytics tables modeled following star-schema patterns.
+The workflow which reads raw data from S3, processes them to create the dimensional model and loads target tables back to S3 bucket into analytical structure can be found in [etl.py](https://github.com/willytakasawa/data-engineering-nanodegree/blob/master/Data%20Lake/etl.py) script.
 
 
 ## How to run
 1. ```Modify dl.cfg```
     - The user must insert information about AWS Project ID, AWS SECRET, AWS PERSONAL TOKEN
 2. ```etl.py```
-    - Load data from S3 into staging tables on Amazon Redshift and process that data into analytics tables
+    - Reads raw data from S3 bucket
+    - Processes them using pySpark to create tables based on analytical structure (star-schema)
+    - Loads the dimensions and fact back to S3 as parquet files
+  
+## Next Steps
+1. Analyze data
+2. Enhance data cleaning and data processing e.g malformed data
+3. Provide analyical insights
