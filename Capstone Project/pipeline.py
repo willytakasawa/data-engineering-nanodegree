@@ -95,7 +95,7 @@ def create_dim_port(spark, file_path, output_path):
     """
 
     # Read raw data
-    df_port = spark.read.options(delimiter=';').csv(file_path, header=True)
+    df_port = spark.read.options(delimiter=',').csv(file_path, header=True)
 
     # Filter U.S. data
     dim_port = df_port.filter(F.col('iso_country')=='US')
