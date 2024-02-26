@@ -301,11 +301,11 @@ def quality_check(spark, data_path):
     data_path -- Path to data
     """
 
-    for file in os.listdir(data_path):
-        try:
-            logging.debug('QUALITY_CHECK - START')
-            start_time = datetime.now()
-
+    try:
+        logging.debug('QUALITY_CHECK - START')
+        start_time = datetime.now()
+        
+        for file in os.listdir(data_path):
             if os.path.isdir(data_path + file):
                 parquet_path = str(data_path + file)
                 df = spark.read.parquet(parquet_path)
@@ -324,8 +324,8 @@ def quality_check(spark, data_path):
             elapsed_time = datetime.now() - start_time
             logging.debug(f'QUALITY_CHECK - Elapsed Time:[{elapsed_time}]')
         
-        except Exception as e:
-            logging.exception('QUALITY_CHECK - Exception: %s', e, exc_info=True)
+    except Exception as e:
+        logging.exception('QUALITY_CHECK - Exception: %s', e, exc_info=True)
 
 def main():
     try:
