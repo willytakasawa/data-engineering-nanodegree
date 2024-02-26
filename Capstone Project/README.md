@@ -1,6 +1,7 @@
 # Capstone Project
 
 ## Introduction
+This project aims to construct a Data Pipeline. The main function extracts the transactional raw data located on raw data folder as csvs and parquet, processes them using Spark, and loads the data back to data folder as a set of dimensional and fact tables as parquet files.
 
 ## Project Datasets
 
@@ -16,7 +17,7 @@ This dataset contains information about the demographics of all US cities and ce
 The data comes from the US Census Bureau's 2015 American Community Survey.
 
 ## [Auxiliary Data](https://github.com/willytakasawa/data-engineering-nanodegree/blob/master/Capstone%20Project/raw_data/I94_SAS_Labels_Descriptions.SAS)
-
+Data description provided.
 
 ## Data Schema
 ### Schema for U.S. Immigration Analysis
