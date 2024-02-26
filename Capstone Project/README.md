@@ -4,6 +4,20 @@
 
 ## Project Datasets
 
+### [I-94 Immigration Data](https://www.trade.gov/i-94-arrivals-historical-data)
+This dataset comes from the US National Tourism and Trade Office and contains information about immigrants in the U.S.
+A data dictionary is included in the workspace on the following path (dictionary).
+
+### [Airport Code](https://datahub.io/core/airport-codes#data)
+This dataset contains airport codes and corresponding cities.
+
+### [U.S. City Demographic Data](https://public.opendatasoft.com/explore/dataset/us-cities-demographics/export/)
+This dataset contains information about the demographics of all US cities and census-designated places with a population greater or equal to 65,000.
+The data comes from the US Census Bureau's 2015 American Community Survey.
+
+## [Auxiliary Data](https://github.com/willytakasawa/data-engineering-nanodegree/blob/master/Capstone%20Project/raw_data/I94_SAS_Labels_Descriptions.SAS)
+
+
 ## Data Schema
 ### Schema for U.S. Immigration Analysis
 This project uses star schema with one fact table and four dimension tables to optimize ad-hoc queries on U.S. immigration events.
